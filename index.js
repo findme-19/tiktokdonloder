@@ -26,13 +26,13 @@ async function ssstik(yuerel) {
 						accept: "*/*",
 						host: "ssstik.io"
 					},
-					data: new URLSearchParams(Object.entries({
+					data: new URLSearchParams({
 						"id": yuerel,
 						"locale": "id",
 						ts: 0,
 						tt: 0,
 						gc: 0
-					}))
+					})
 				})
 				var anu = cheerio.load(b.data)
 				var data = {
@@ -170,16 +170,48 @@ async function snaptik(yuerel) {
 		})
 	})
 }
+async function tikmate(yuerel) {
+	return new Promise(async (resolve, reject) => {
+		var a = await axios.request("https://api.tikmate.app/api/lookup", {
+			method: "POST",
+			headers: {
+				"content-type": "application/x-www-form-urlencoded; charset=UTF-8",
+				accept: "*/*"
+			},
+			data: new URLSearchParams({
+				url: yuerel
+			})
+		})
+		return resolve({
+			author: {
+				avatar: a.data.author_avatar
+			},
+			detail_video: {
+				dibuat: a.data.create_time,
+				komentar: a.data.comment_count + " Komentar",
+				suka: a.data.like_count + " Suka",
+				dibagikan: a.data.share_count + "x"
+			},
+			video: {
+				nowm: "https://tikmate.app/download/" + a.data.token + "/" + a.data.id + ".mp4",
+				nowm_hd: "https://tikmate.app/download/" + a.data.token + "/" + a.data.id + ".mp4?hd=1"
+			}
+		})
+	})
+}
 /** usage
  * var a = await ssstik("https://vt.tiktok.com/ZSdfPds4S/")
  * var b = await snaptik("https://vt.tiktok.com/ZSdfPds4S/")
+ * var c = await tikmate("https://vt.tiktok.com/ZSdfPds4S/")
  * console.log({
  *	a,
- *	b
+ *	b, 
+ *      c
  * })
  **/
 
 module.exports = {
 	ssstik,
-	snaptik
+	snaptik,
+	tikmate
 }
