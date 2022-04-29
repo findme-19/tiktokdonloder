@@ -1,3 +1,5 @@
+var axios = require("axios");
+var cheerio = require("cheerio");
 async function tikitod(yuerel) {
 	return new Promise(async (resolve, reject) => {
 		try {
